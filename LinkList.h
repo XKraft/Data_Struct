@@ -1,23 +1,31 @@
-#pragma once
+#ifndef _LINKLIST_H_
+#define _LINKLIST_H_
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#define true 1
-#define false 0
+#include "ball.h"
 
-typedef int DataType;
+//typedef int DataType;
+typedef ball DataType;
+
 typedef struct Node
 {
-	DataType data;
-	struct Node *next;
+    DataType data;
+    struct Node *next;
 } Node;
 
 
-_Bool CreateEmptyList(Node** head);
 
-_Bool CreateList(DataType *addr, unsigned int n, Node** head);
+Node* CreateEmptyList();
 
-_Bool DestroyList(Node *head);
+Node* CreateList(DataType *addr, unsigned int n);
 
-_Bool ListInsert(Node *head, unsigned int index, DataType e);
+void DestroyList(Node *head);
 
-_Bool ListDelete(Node *head, unsigned int index, DataType* e);
+void ListInsert(Node *head, unsigned int index, DataType data);
+
+DataType ListDelete(Node *head, unsigned int index);
+
+
+#endif
