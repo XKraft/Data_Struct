@@ -1,93 +1,49 @@
-#include <stdio.h>
-#include <assert.h>
-#include <crtdbg.h>
-#include "LinkList.h"
+#include"MyQueue.h"
+#include<assert.h>
+#include<stdio.h>
+#include <crtdbg.h>//add this header file to detect memory leaks
 
-#define _CRTDBG_MAP_ALLOC
-
-
-void PrintList(Node* head)
+int main(int argc, char*argv[])
 {
-	Node *p = head->next;
-	if (p == NULL) {
-		printf("Empty List");
-	}
-	while (p != NULL) {
-		printf("%d ", p->data);
-		p = p->next;
-	}
-	printf("\n");
-}
-
-
-int main(int argc, char* argv[])
-{
-	Node *head = NULL, *p;
-	int array[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	Queue* Q;
 	int i;
-
-	// If your code is compiled successfully, you will get 60.
-	printf("60\n");
-
-	// If you create an empty linked list successfully, you will get 70.
-	CreateEmptyList(&head);
-	//ListInsert(head, 0, 1);
-	for (i = 0; i < 10; ++i) {
-		ListInsert(head, 0, i);
+	int n;
+	int array[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	printf("60\n");//If you compile successfully, you  will get 60!
+	Q = CreatQueue(MAXSIZE);
+	assert(Q->base != NULL&&Q->front == 0 && Q->rear == 0 && Q->maxsize == MAXSIZE);
+	printf("70\n");//If you initialize the queue sucessfully, you  will get 70!
+	for (i = 0; i<10; i++)
+	{
+		Insert(Q, array[i]);
 	}
-
-	p = head->next;
-	for (i = 0; i < 10; ++i) {
-		assert(p->data == array[9 - i]);
-		p = p->next;
-	}
-	assert(p == NULL);
-	DestroyList(head);
-	printf("70\n");
-
-	// If you initialize the linked list with an array successfully, you will get 80.
-	CreateList(array, 10, &head);
-	p = head->next;
-	for (i = 0; i < 10; ++i) {
-		assert(p->data == i);
-		p = p->next;
-	}
-	assert(p == NULL);
+	assert(Length(Q) == 10);
+	assert(Full(Q) == true);
+	assert(Insert(Q, 10) == false);//The queue is full.If you insert a number,it will return fasle;
 	printf("80\n");
-
-	// If your insert function is correct, you will get 90.
-	for (i = 0; i < 10; ++i) {
-		ListInsert(head, i, i + 10);
-	}
-	p = head->next;
-	for (i = 0; i < 20; ++i) {
-		if (i < 10) {
-			assert(p->data == i + 10);
+	for (i = 0; i<10; i++)
+	{
+		if (Delete(Q, &n))
+		{
+			assert(n == i);
 		}
-		else {
-			assert(p->data == i - 10);
-		}
-		p = p->next;
 	}
-	assert(p == NULL);
+	assert(Empty(Q) == true);
+	assert(Delete(Q, n) == false);//The queue is empty.If you delete a number,it will return fasle;
+	for (i = 0; i<10; i++)
+	{
+		Insert(Q, array[i]);
+	}
+	assert(Q->front == 10 && Q->rear == 9);
+	assert(Length(Q) == 10);
+	for (i = 0; i<10; i++)
+	{
+		assert(Q->base[(Q->front + i) % Q->maxsize] == i);
+	}
 	printf("90\n");
-
-	// If your delete function is correct, you will get 100.
-	DataType temp;
-	for (i = 19; i > 9; --i) {
-		ListDelete(head, i, &temp);
-		assert(temp == i - 10);
-	}
-
-	p = head->next;
-	for (i = 0; i < 10; ++i) {
-		assert(p->data == i + 10);
-		p = p->next;
-	}
-
-	assert(p == NULL);
-	//PrintList(head);
-	DestroyList(head);
+	DestroyQueue(Q);
+	assert(Q->base == NULL);
+	free(Q);
 	if (!_CrtDumpMemoryLeaks())
 	{
 		printf("100!\n");
